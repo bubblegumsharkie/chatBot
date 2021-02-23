@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SplittableRandom;
 
 public class Bot extends TelegramLongPollingBot {
 
@@ -41,10 +42,26 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public void sendMsg(Message message, String text) {
+
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId().toString());
+            sendMessage.setReplyToMessageId(message.getMessageId());
+            sendMessage.setText(text);
+            try {
+                showButtons(sendMessage);
+                execute(sendMessage);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    public void sendRates(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(message.getChatId().toString());
-        sendMessage.setReplyToMessageId(message.getMessageId());
-        sendMessage.setText(text);
+        String reply = RatesToChat.rateMyCurrency(text);
+        sendMessage.setText(reply);
         try {
             showButtons(sendMessage);
             execute(sendMessage);
@@ -65,9 +82,9 @@ public class Bot extends TelegramLongPollingBot {
         List<KeyboardRow> keyboardRowList = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
-        keyboardFirstRow.add(new KeyboardButton("please help 🙊"));
+        keyboardFirstRow.add(new KeyboardButton("what can you do? 🙊"));
         keyboardFirstRow.add(new KeyboardButton("send meow 🐱"));
-        keyboardFirstRow.add(new KeyboardButton("show me random gif of a cat"));
+//        keyboardFirstRow.add(new KeyboardButton("list of currencies"));
 
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
@@ -88,7 +105,14 @@ public class Bot extends TelegramLongPollingBot {
                 String strGif = message.getText().replaceFirst("/gif ", "");
                 System.out.println("Tag to search is: " + strGif);
                 System.out.println("-----------------------------------");
-                sendGif(message,strGif);
+                sendGif(message, strGif);
+            }
+
+            if (message.getText().startsWith("/rate")) {
+                String strRate = message.getText().replaceFirst("/rate ", "");
+                System.out.println("Rate to look up is: *" + strRate + "*");
+                System.out.println("-----------------------------------");
+                sendRates(message, strRate);
             }
 
             switch (message.getText()) {
@@ -96,15 +120,18 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, "Hi " + message.getFrom().getFirstName() + "! There are some buttons over here to push and also I can show you a random gif! " +
                             "\n\nJust type /gif *keyword* and I'll do the rest!");
                     break;
-                case "please help 🙊" :
-                    sendMsg(message, "Wanna see a random gif? Just type /gif and keyword");
-                    break;
-                case "show me random gif of a cat" :
-                    sendGif(message, "cat");
+                case "what can you do? 🙊" :
+                    sendMsg(message, "Wanna see a random gif? Just type /gif and keyword \n\nWanna know rate of RUB in other currencies? Type /rate USD or any other currency");
                     break;
                 case "send meow 🐱" :
                     sendMsg(message, "ok ok meow alright ok meow just chill");
                     break;
+//
+//                case "list of currencies" :
+//                    sendMsg(message, "rates");
+//                    break;
+
+
             }
         }
     }
@@ -116,6 +143,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "1671274841:AAEyy6UHkVPvfGfpX9I2c79-emGCeLLRfS4";
+        return "";
     }
 }

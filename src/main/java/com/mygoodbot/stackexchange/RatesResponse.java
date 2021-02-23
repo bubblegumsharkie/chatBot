@@ -21,16 +21,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class RatesResponse {
 
     @JsonProperty("disclaimer")
-    private String disclaimer;
+    public String disclaimer;
     @JsonProperty("license")
-    private String license;
+    public String license;
     @JsonProperty("timestamp")
-    private Integer timestamp;
+    public Integer timestamp;
     @JsonProperty("base")
-    private String base;
+    public String base;
     @JsonProperty("rates")
 //    public Rates rates;
-    private Map<String, Object> rates = new HashMap<String, Object>();
+    public Map<String, Object> rates = new HashMap<String, Object>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
