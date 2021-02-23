@@ -93,7 +93,8 @@ public class Bot extends TelegramLongPollingBot {
 
             switch (message.getText()) {
                 case "/start":
-                    sendMsg(message, "Hi " + message.getFrom().getFirstName() + "! There are some buttons over here and also I can show you a random gif! Just type /gif *keyword* and i'll do the rest!");
+                    sendMsg(message, "Hi " + message.getFrom().getFirstName() + "! There are some buttons over here to push and also I can show you a random gif! " +
+                            "\n\nJust type /gif *keyword* and I'll do the rest!");
                     break;
                 case "please help 🙊" :
                     sendMsg(message, "Wanna see a random gif? Just type /gif and keyword");
@@ -115,6 +116,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "";
+        return "1671274841:AAEyy6UHkVPvfGfpX9I2c79-emGCeLLRfS4";
     }
 }
