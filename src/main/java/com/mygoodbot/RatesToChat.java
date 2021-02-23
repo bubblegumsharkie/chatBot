@@ -4,8 +4,8 @@ import org.springframework.web.client.RestTemplate;
 import com.mygoodbot.stackexchange.*;
 
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RatesToChat {
 
@@ -18,17 +18,22 @@ public class RatesToChat {
 
             for (String s : namesRates) {
                 i++;
-                reply = reply + " " + s + ",";
-                if (i%8 == 0) reply = reply + "\n";
+                reply = reply + " " + s + " |";
+                if (i%5 == 0)  {
+//                    if (reply.charAt(reply.length()) == '|') {
+//                        reply = reply.substring(0, reply.length()-1);
+//                    }
+                    reply = reply + "\n\n";
+
+                }
             }
             reply = reply.substring(0, reply.length()-1);
-
             return reply;
 
         } else {
             try {
                 int amountOfDays = 1; //default
-                String exchangeRateSpec = rate; //default
+                String exchangeRateSpec = rate.toUpperCase(Locale.ROOT); //default
                 RestTemplate restTemplate = new RestTemplate();
                 //parsing rates for today
                 String apiStackExKey = "7ef595540eb2404ab25193eec7a6a603"; //change api key here
@@ -48,7 +53,7 @@ public class RatesToChat {
             }
         }
 
-        return "Please check for typos and stuff. Correct request should look something like that: /rate USD \n\n To see all available currencies type /rate list";
+        return "Please check for typos and stuff. Correct request should look something like that: /rate USD \n\nTo see all available currencies type /ratelist";
     }
 
     public static ArrayList<String> getRatesNames() {
