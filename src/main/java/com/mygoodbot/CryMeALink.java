@@ -19,7 +19,8 @@ public class CryMeALink {
         Gifs responseGiphy = restTemplate.getForObject(jsonGiphyURL, Gifs.class);
         String gifLink = responseGiphy.getData().get(selectRand).getImages().getFixedHeight().getUrl();
         System.out.println("the link is: " + gifLink);
-    return gifLink;
+        System.out.println("-----------------------------------");
+        return gifLink;
     }
 
 }

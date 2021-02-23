@@ -1,5 +1,6 @@
 package com.mygoodbot;
 
+import com.google.common.xml.XmlEscapers;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.ApiContextInitializer;
@@ -75,24 +76,30 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
+        System.out.println("----- new request from: " + message.getFrom().getFirstName() + " ------");
+        System.out.println("-----------------------------------");
         if (message !=null) {
             System.out.println("initial msg: " + message.getText());
+            System.out.println("-----------------------------------");
             System.out.println("Whole info about msg:" + message.toString());
+            System.out.println("-----------------------------------");
+
             if (message.getText().startsWith("/gif")) {
                 String strGif = message.getText().replaceFirst("/gif ", "");
                 System.out.println("Tag to search is: " + strGif);
+                System.out.println("-----------------------------------");
                 sendGif(message,strGif);
             }
 
             switch (message.getText()) {
                 case "/start":
-                    sendMsg(message, "Hello there! There are some buttons over here and also i can show you a random gif! Just type /gif *keyword* and i'll do the rest!");
+                    sendMsg(message, "Hi " + message.getFrom().getFirstName() + "! There are some buttons over here and also I can show you a random gif! Just type /gif *keyword* and i'll do the rest!");
                     break;
                 case "please help 🙊" :
                     sendMsg(message, "Wanna see a random gif? Just type /gif and keyword");
                     break;
                 case "show me random gif of a cat" :
-                    sendGif(message, "gif!");
+                    sendGif(message, "cat");
                     break;
                 case "send meow 🐱" :
                     sendMsg(message, "ok ok meow alright ok meow just chill");
