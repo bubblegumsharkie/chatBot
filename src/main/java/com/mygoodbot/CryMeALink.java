@@ -11,7 +11,7 @@ public class CryMeALink {
         String apiGiphyKey = "WuJjckB75aXB4nruBShg7e0t4UZVqJ3h"; //change api key here
         String richBroke = str;
         int offset = 0; //offset value (if you want to mix up things)
-        int limit = 25; // giphy returns max of 50 gifs but best to cut to 20-25 just because first gifs are usually better and more context-related
+        int limit = 20; // giphy returns max of 50 gifs but best to cut to 20-25 just because first gifs are usually better and more context-related
         int upperbound = limit + offset; //creating upperbound for request
         Random r = new Random();
         int selectRand = r.nextInt(upperbound - offset - 1);

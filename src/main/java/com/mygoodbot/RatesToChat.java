@@ -44,7 +44,7 @@ public class RatesToChat {
                 DecimalFormat df = new DecimalFormat("0.00000");
                 double comparingValue = Double.parseDouble(ratesToday.getRates().get(exchangeRateSpec).toString()); //rate of comparing value to USD today
                 double oneRUBCompare = comparingValue / (double) ratesToday.getRates().get("RUB"); // 1 ruble in comparing value today
-                String reply = "The rate of 1 RUB = " + df.format(oneRUBCompare) + " " + exchangeRateSpec; // + " and " + amountOfDays + " days before it was " + df.format(oneRUBCompareYesterday) + " " + exchangeRateSpec;
+                String reply = "The rate of 1 RUB = " + df.format(oneRUBCompare) + " " + exchangeRateSpec + "\nand rate of 1 " + exchangeRateSpec + " = " + df.format(1/oneRUBCompare) + " RUB"; // + " and " + amountOfDays + " days before it was " + df.format(oneRUBCompareYesterday) + " " + exchangeRateSpec;
 
                 return reply;
 
