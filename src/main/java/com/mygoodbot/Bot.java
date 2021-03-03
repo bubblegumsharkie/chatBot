@@ -14,11 +14,16 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Bot extends TelegramLongPollingBot {
+
+    Map<String, Integer> users = new HashMap<>();
+
+    // fill your info here
+    String ownerID = ""; //owner of a bot
+    String apiKey = ""; //api key for a bot
+
 
     public static void main(String[] args) {
         CreateFile.create();
@@ -49,10 +54,38 @@ public class Bot extends TelegramLongPollingBot {
 //        sendPhoto.setPhoto(image);
 //    }
 
+    public void sendMail() {
+        // this function will send you your content from message (i.e. text, photo, video, voice etc)
+    }
+
+    public void remindMe() {
+        // this function will remind you about your content from message (i.e. text, photo, video, voice etc) at selected time
+    }
+
+        //this will be connected to a DB later
+    public void whoUsedBot(Message message) {
+        if (users.containsKey(message.getFrom().getUserName())) {
+            users.put(message.getFrom().getUserName(), (users.get(message.getFrom().getUserName()) + 1));
+        } else {
+            users.put(message.getFrom().getUserName(), 1);
+        }
+        String reply = users.toString();
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(ownerID);
+        sendMessage.setText(reply);
+        try {
+            execute(sendMessage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void whoIsThere(Message message) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId("");
-        int epoch = message.getDate();
+        sendMessage.setChatId(ownerID);
+        long epoch = message.getDate();
         String date = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date(epoch*1000L));
         sendMessage.setText("Somebody just used your bot and the username is @" + message.getFrom().getUserName() + "\n\nthe message was: \n" + message.getText() +"" +
                 "\nDate: " + date);
@@ -63,7 +96,22 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+    public void sendWasASleep(Message message) {
+        long epochCurrent = System.currentTimeMillis()/1000;
+        if ((epochCurrent - message.getDate()) > 120) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(message.getChatId().toString());
+            sendMessage.setText("Hello! We went offline for a bit but here we are and I will look into all your messages in a millisec or two");
+            try {
+                showButtons(sendMessage);
+                execute(sendMessage);
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
     public void sendGif(Message message, String text) {
         SendAnimation sendAnimation = new SendAnimation();
         String gifURL = CryMeALink.gifLinkCreate(text);
@@ -77,7 +125,7 @@ public class Bot extends TelegramLongPollingBot {
         }
         //logging gifs
         SendAnimation sendMessage = new SendAnimation();
-        sendMessage.setChatId("");
+        sendMessage.setChatId(ownerID);
         sendMessage.setAnimation(gifURL);
         try {
             execute(sendMessage);
@@ -138,10 +186,11 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         whoIsThere(update.getMessage());
-        int epoch = update.getMessage().getDate();
+        long epoch = update.getMessage().getDate();
         String date = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date(epoch*1000L));
         Message message = update.getMessage();
-
+//        whoUsedBot(message);
+        sendWasASleep(message);
         WriteToFile.write("\n\n----- new request from: " + message.getFrom().getFirstName() + " -----");
         WriteToFile.write("----- username: " + message.getFrom().getUserName() + " -----");
         System.out.println("----- new request from: " + message.getFrom().getFirstName() + " ------");
@@ -198,6 +247,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "";
+        return apiKey;
     }
 }
