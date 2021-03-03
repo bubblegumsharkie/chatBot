@@ -21,8 +21,8 @@ public class Bot extends TelegramLongPollingBot {
     Map<String, Integer> users = new HashMap<>();
 
     // fill your info here
-    String ownerID = ""; //owner of a bot
-    String apiKey = ""; //api key for a bot
+    String ownerID = "";
+    String apiKey = "";
 
 
     public static void main(String[] args) {
@@ -97,18 +97,25 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
     public void sendWasASleep(Message message) {
-        long epochCurrent = System.currentTimeMillis()/1000;
-        if ((epochCurrent - message.getDate()) > 120) {
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(message.getChatId().toString());
-            sendMessage.setText("Hello! We went offline for a bit but here we are and I will look into all your messages in a millisec or two");
-            try {
-                showButtons(sendMessage);
-                execute(sendMessage);
 
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (users.get(message.getFrom().getUserName()) == 1) {
+
+
+            long epochCurrent = System.currentTimeMillis() / 1000;
+            if ((epochCurrent - message.getDate()) > 10) {
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setChatId(message.getChatId().toString());
+                sendMessage.setText("Hello! We went offline for a bit but here we are and I will look into all your messages in a millisec or two");
+                try {
+                    showButtons(sendMessage);
+                    execute(sendMessage);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+        } else {
+            users.put(message.getFrom().getUserName(), users.get(message.getFrom().getUserName())-1);
         }
 
     }
@@ -189,7 +196,7 @@ public class Bot extends TelegramLongPollingBot {
         long epoch = update.getMessage().getDate();
         String date = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date(epoch*1000L));
         Message message = update.getMessage();
-//        whoUsedBot(message);
+        whoUsedBot(message);
         sendWasASleep(message);
         WriteToFile.write("\n\n----- new request from: " + message.getFrom().getFirstName() + " -----");
         WriteToFile.write("----- username: " + message.getFrom().getUserName() + " -----");
